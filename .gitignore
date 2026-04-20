@@ -1,0 +1,37 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+*.spec
+
+# Environment
+.env
+*.env
+.env.local
+
+# Blog content (proprietary — not tracked in template)
+# brief .md files, and all content in research/, drafts/, published/
+blog/briefs/*.md
+blog/research/**
+blog/drafts/**
+blog/published/**
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code settings (may contain local paths)
+.claude/settings.local.json
