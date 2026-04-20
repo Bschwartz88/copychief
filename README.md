@@ -10,7 +10,7 @@ CopyChief gives Claude persistent knowledge about your brand so it can:
 - **Review** drafts against your brief, brand voice, author voice, persona, and SEO strategy — with a weighted scoring rubric
 - **Write** content that consistently matches your voice, targets the right keywords, and serves the right audience
 
-All outputs are delivered as formatted Word documents with sidebar editorial comments.
+All outputs are delivered as formatted .html documents or Word documents with sidebar editorial comments (that can be imported easily into a Google Doc).
 
 ## How It Works
 
