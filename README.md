@@ -149,6 +149,7 @@ copychief/
 - **The review rubric is calibrated, not generous** — a 70–80 score means "solid draft, needs polish." Reserve 90+ for near-final copy.
 - **Named author voice matters** — if you publish under a specific byline, invest time in `expert-voice.md`. The difference is noticeable.
 - **Briefs are the foundation** — vague briefs produce vague output. The more specific your brief, the better the prep and review.
+- **Use NotebookLM to perform a secondary review** - Create a detailed notebook about your targeted persona. Then, via NotebookLM directly or via Claude, ask how that persona would: react to that content, identify missing points and suggestion questions or areas of improvement that the persona would have.  
 
 ---
 
