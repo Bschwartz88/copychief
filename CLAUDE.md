@@ -62,10 +62,47 @@ These files are designed to work together without overlap. Key dependencies:
 
 ## Project Folders
 
-- `/blog/briefs/` — Assignment briefs (input)
-- `/blog/research/` — Prep outputs and review results
-- `/blog/drafts/` — Working drafts and revisions
-- `/blog/published/` — Final approved content
+- `context/` — Brand and editorial reference files (read-only during production)
+- `blog/briefs/` — Assignment briefs (input)
+- `blog/research/` — Prep outputs (.md + .docx)
+- `blog/drafts/` — Working drafts received from authors (.md files)
+- `blog/reviews/` — Review outputs (-edits.docx + -edits.html)
+- `blog/published/` — Final approved content
+- `tools/` — Python build scripts (do not modify unless instructed)
+
+---
+
+## File Naming
+
+All content files use kebab-case slugs. The slug is the stable identifier for an article across its whole lifecycle — chosen at brief creation, never changed.
+
+| Stage | Path pattern |
+|---|---|
+| Brief | `blog/briefs/{slug}.md` |
+| Prep | `blog/research/{slug}-prep.md` and `{slug}-prep.docx` |
+| Draft | `blog/drafts/{slug}-draft.md` |
+| Review | `blog/reviews/{slug}-edits.docx` and `{slug}-edits.html` |
+| Published | `blog/published/{slug}-final.md` |
+
+Slug rules: 2–5 words, lowercase, hyphens only, no dates, no version numbers, no content-type suffixes.
+
+---
+
+## Python Tools
+
+```powershell
+.venv\Scripts\Activate.ps1
+python tools/build_prep.py {slug}
+python tools/build_review.py {slug}
+```
+
+Requires `tools/data/{slug}.py` to exist and be populated before running.
+
+---
+
+## Content Lifecycle
+
+Track content status in `CHANGELOG.md` at the project root. To check what's in-flight: "Read CHANGELOG.md and summarize the current status of all active pieces."
 
 ---
 
@@ -75,7 +112,7 @@ These files are designed to work together without overlap. Key dependencies:
 - Never allow more than one set of em dashes in an article. The exception is if the em dash is part of a bulleted list.
 - Ask clarifying questions if anything in the brief is ambiguous or incomplete before executing a command.
 - Output all prep deliverables in `/blog/research/` as Word documents with formatting preserved and comments noted as a citation on the copy and displayed in a sidebar.
-- Output all review deliverables in `/blog/drafts/` as Word documents with formatting preserved and comments noted as a citation on the copy and displayed in a sidebar. Be careful to retain all hyperlinks.
+- Output all review deliverables in `blog/reviews/` as Word documents with formatting preserved and comments noted as a citation on the copy and displayed in a sidebar. Be careful to retain all hyperlinks.
 - Pay close attention to flow and transitions between paragraphs.
 - Pay close attention to adherence to brand voice whether the author is unknown or a named expert.
 

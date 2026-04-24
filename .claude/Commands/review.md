@@ -133,4 +133,4 @@ After all five categories, produce:
 
 ---
 
-5. Generate a Word document (.docx) and an HTML document (.html) showing the full revised draft with all suggested edits highlighted in yellow. Comments and reasoning within the document should be highlighted in light blue. After the suggested revisions, include a bullet list of specific reasonings for each suggestion, with a citation to the relevant point in the article. Export the Word document to blog/drafts/$ARGUMENTS-edits.docx and the .html document to blog/drafts/$ARGUMENTS-edits.html.
+5. Generate a Word document (.docx) and an HTML document (.html) showing the full revised draft with all suggested edits highlighted in yellow. Comments and reasoning within the document should be highlighted in light blue. After the suggested revisions, include a bullet list of specific reasonings for each suggestion, with a citation to the relevant point in the article. Export the Word document to blog/reviews/$ARGUMENTS-edits.docx and the .html document to blog/reviews/$ARGUMENTS-edits.html.
