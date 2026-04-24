@@ -10,15 +10,16 @@ CopyChief gives Claude persistent knowledge about your brand so it can:
 - **Review** drafts against your brief, brand voice, author voice, persona, and SEO strategy — with a weighted scoring rubric
 - **Write** content that consistently matches your voice, targets the right keywords, and serves the right audience
 
-All outputs are delivered as formatted Word documents with sidebar editorial comments.
+All outputs are delivered as formatted .html documents or Word documents with sidebar editorial comments (that can be imported easily into a Google Doc).
 
 ## How It Works
 
-The system uses three layers:
+The system uses four layers:
 
 1. **`CLAUDE.md`** — Project-level instructions that Claude loads in every session. Defines Claude's role, which context files to load, and your working preferences.
 2. **`/context/` files** — Your brand's knowledge base: editorial standards, SEO strategy, audience personas, messaging framework, brand reference, and named author voices.
 3. **`/commands/` scripts** — Two slash commands (`/prep` and `/review`) that execute structured workflows against any assignment brief.
+4. **`/skills/` files** — Add skills if you like for topics like AEO/GEO/SEO or humanizing text.
 
 ---
 
@@ -149,6 +150,7 @@ copychief/
 - **The review rubric is calibrated, not generous** — a 70–80 score means "solid draft, needs polish." Reserve 90+ for near-final copy.
 - **Named author voice matters** — if you publish under a specific byline, invest time in `expert-voice.md`. The difference is noticeable.
 - **Briefs are the foundation** — vague briefs produce vague output. The more specific your brief, the better the prep and review.
+- **Use NotebookLM to perform a secondary review** — Create a detailed notebook about your targeted persona. Then, via NotebookLM directly or via Claude, ask how that persona would: react to that content, identify missing points and suggestion questions or areas of improvement that the persona would have.  
 
 ---
 
