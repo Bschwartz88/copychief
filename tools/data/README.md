@@ -43,6 +43,15 @@ REVIEW = {
 | `{{note:text}}` | light-blue inline comment text |
 | `{{c3}}` | anchors sidebar comment #3 to the run before it |
 
+Block types: `h1`, `h2`, `h3`, `body`, `bullet`, `meta` and `hr`.
+
+Two limits to know:
+- Inline markup renders only in `body`, `bullet` and `meta` blocks. Heading text is printed
+  as is, so to suggest a new heading, use the new text as the heading and put the
+  `{{note:...}}` and `{{cN}}` in the body line below it.
+- Markup doesn't nest. A `[link](url)` inside `{{hl:...}}` prints as raw text, so close
+  the highlight before the link: `{{hl:See}} [title](url){{c3}}`.
+
 A data file can contain PREP, REVIEW, or both. Build with:
 
 ```powershell
