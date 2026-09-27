@@ -108,7 +108,7 @@ Track content status in `CHANGELOG.md` at the project root. To check what's in-f
 
 ## Working Preferences
 
-- All content must comply with AP Style. The only exception is to not flag for acronyms not being spelled out.
+- All content must comply with AP Style. Acronyms follow the first-use and terms-of-art rule in `editorial-standards.md`.
 - Never allow more than one set of em dashes in an article. The exception is if the em dash is part of a bulleted list.
 - Ask clarifying questions if anything in the brief is ambiguous or incomplete before executing a command.
 - Output all prep deliverables in `/blog/research/` as Word documents with formatting preserved and comments noted as a citation on the copy and displayed in a sidebar.

@@ -45,7 +45,7 @@
 
 **Key rules:**
 - [Rule 1 — e.g., how to handle numbers]
-- [Rule 2 — e.g., how to handle acronyms on first use]
+- [Rule 2 — e.g., acronyms: spell out on first use, except a list of terms of art the audience knows by the acronym; flag any other unspelled acronym as a question]
 - [Rule 3 — e.g., em dash usage policy]
 - [Rule 4 — e.g., Oxford comma policy]
 - [Rule 5 — e.g., capitalization rules specific to your industry]
