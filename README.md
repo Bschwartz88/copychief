@@ -109,7 +109,7 @@ After you have a draft saved to `/blog/drafts/zero-trust-explainer-draft.md`, ru
 /review zero-trust-explainer
 ```
 
-Claude will read the brief, prep, and draft, then deliver a review document to `/blog/drafts/zero-trust-explainer-edits.docx` containing:
+Claude will read the brief, prep, and draft, then deliver a review document to `/blog/reviews/zero-trust-explainer-edits.docx` containing:
 
 - Editorial summary (2–3 sentences)
 - Detailed review across 8 dimensions
@@ -137,8 +137,15 @@ copychief/
 ├── blog/
 │   ├── briefs/                    # Assignment briefs (input)
 │   ├── research/                  # Prep outputs
-│   ├── drafts/                    # Working drafts and review outputs
+│   ├── drafts/                    # Working drafts
+│   ├── reviews/                   # Review outputs (-edits.docx + .html)
 │   └── published/                 # Final approved content
+├── tools/                         # Shared build scripts (see tools/README.md)
+│   ├── build_prep.py              # Prep .md + .docx
+│   ├── build_review.py            # Highlight-style review
+│   ├── build_review_tracked.py    # Tracked-changes review (Google Docs suggestions)
+│   ├── quick.py                   # Quick mode: one-off jobs with no folder
+│   └── data/                      # Per-article content files + schema
 └── .gitignore
 ```
 
