@@ -12,6 +12,7 @@ Claude writes *content* into a data file. It never writes a new build script per
 | `build_prep.py {slug}` | Prep doc: `{slug}-prep.md` + `.docx` from the data file's `PREP` dict |
 | `build_review.py {slug}` | Highlight review: yellow edits, light-blue notes and Word sidebar comments (`REVIEW` dict) |
 | `build_review_tracked.py {slug}` | Tracked-changes review: native Word insertions and deletions plus anchored comments. It opens in Google Docs as accept/reject **suggestions** (`TRACKED` dict, or `BLOCKS`/`COMMENTS`) |
+| `quick.py` | Quick mode for one-off jobs with no folder (used by the `copychief-quick` skill). Reads an attached draft, builds a tracked review from plain revised text by word diff and checks it, and renders prep, scorecard and draft docs. Nothing in the folder workflows calls it. Usage is in its docstring |
 
 Supporting files:
 - `docx_lib.py` handles brand formatting (Montserrat/Open Sans, colors, links and comments) for the prep and highlight builds.

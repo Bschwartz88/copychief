@@ -176,8 +176,10 @@ def _del_run(p, text, bold=False):
 
 
 def _ins_hyperlink(p, url, text):
+    # w:ins may hold runs but not a hyperlink, so the revision mark goes inside the
+    # link around its run. Wrapping the whole link made Word/LibreOffice drop the text.
     hl = _add_hyperlink(p, url, text)
-    _wrap(hl, "w:ins")
+    _wrap(hl.find(qn("w:r")), "w:ins")
 
 
 def _sentinel(p, marker):
@@ -255,11 +257,30 @@ def _render_table(doc, rows):
                 run.bold = True
 
 
-def build_docx(docx_path: Path) -> None:
+def build_docx(docx_path: Path, header: bool = True) -> None:
+    """header=False leaves out the title and instruction lines, so the document holds
+    only the article and "Accept all" leaves nothing to delete (used by quick.py)."""
     doc = Document()
     doc.styles["Normal"].font.name = "Calibri"
     doc.styles["Normal"].font.size = Pt(11)
 
+    if header:
+        _add_header(doc)
+
+    for style, op, cid, payload in BLOCKS:
+        if style == "table":
+            _render_table(doc, payload)
+        else:
+            _render_paragraph(doc, style, op, cid, payload)
+
+    docx_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = docx_path.parent / "_review_tmp.docx"
+    doc.save(tmp)
+    _postprocess_comments(tmp, docx_path)
+    tmp.unlink(missing_ok=True)
+
+
+def _add_header(doc) -> None:
     t = doc.add_paragraph()
     tr = t.add_run(f"Editorial Review (tracked changes) — {TITLE}")
     tr.bold = True
@@ -274,18 +295,6 @@ def build_docx(docx_path: Path) -> None:
     sr.font.size = Pt(9)
     sr.font.color.rgb = RGBColor(0x55, 0x55, 0x55)
     doc.add_paragraph()
-
-    for style, op, cid, payload in BLOCKS:
-        if style == "table":
-            _render_table(doc, payload)
-        else:
-            _render_paragraph(doc, style, op, cid, payload)
-
-    docx_path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = docx_path.parent / "_review_tmp.docx"
-    doc.save(tmp)
-    _postprocess_comments(tmp, docx_path)
-    tmp.unlink(missing_ok=True)
 
 
 # ---------------------------------------------------------------------------
