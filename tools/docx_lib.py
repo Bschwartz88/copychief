@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import html as htmllib
 import re
+from _security import safe_url, safe_comment_id
 
 import docx
 from docx.enum.text import WD_COLOR_INDEX
@@ -52,6 +53,7 @@ def _set_font(run, name="Open Sans", size=11, bold=False, italic=False, color=No
 
 
 def _add_hyperlink(paragraph, text, url, size=11):
+    url = safe_url(url)
     part = paragraph.part
     r_id = part.relate_to(
         url,
@@ -192,7 +194,7 @@ def _html_inline(text, comments=None):
             parts.append(f'<sup class="cref"><a href="#c{cid}">[{cid}]</a></sup>')
         elif part.startswith("[") and "](" in part:
             m = re.fullmatch(r"\[([^\]]+)\]\(([^)]+)\)", part)
-            parts.append(f'<a href="{htmllib.escape(m.group(2))}">{htmllib.escape(m.group(1))}</a>')
+            parts.append(f'<a href="{htmllib.escape(safe_url(m.group(2)))}">{htmllib.escape(m.group(1))}</a>')
         elif part.startswith("**"):
             parts.append(f"<strong>{htmllib.escape(part[2:-2])}</strong>")
         elif part.startswith("*"):
@@ -235,6 +237,7 @@ def render_html(blocks, comments=None, title=None):
         out.append('<div class="comments"><h2>Editorial Comments</h2><ol>')
         for cid in sorted(comments):
             label, reason = comments[cid]
+            cid = safe_comment_id(cid)
             out.append(f'<li id="c{cid}"><strong>{htmllib.escape(label)}.</strong> {htmllib.escape(reason)}</li>')
         out.append("</ol></div>")
     out.append("</body></html>")

@@ -19,7 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import docx_lib
-from _paths import load_data, resolve
+from _paths import load_data, resolve, checked_path
 
 
 def main():
@@ -34,13 +34,13 @@ def main():
     out_dir = resolve(slug)["research"]
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    md_path = out_dir / f"{slug}-prep.md"
+    md_path = checked_path(out_dir / f"{slug}-prep.md")
+    docx_path = checked_path(out_dir / f"{slug}-prep.docx")
     md_path.write_text(
         docx_lib.render_md(prep["blocks"], title=prep.get("title")), encoding="utf-8"
     )
 
     doc = docx_lib.render_docx(prep["blocks"], title=prep.get("title"))
-    docx_path = out_dir / f"{slug}-prep.docx"
     doc.save(docx_path)
 
     print(f"OK: {md_path}")

@@ -38,10 +38,15 @@ python -m venv .venv
 # macOS/Linux:
 source .venv/bin/activate
 
-pip install python-docx markdown openpyxl pypandoc pillow
+python -m pip install --upgrade "pip>=26.2"
+python -m pip install -r requirements.txt
 ```
 
 ### 2. Fill in the Context Files
+
+Use a private working copy for real client details. Keep this public checkout as
+a generic template: changes to tracked context files remain eligible for commit
+even when content output folders are ignored. See [SECURITY.md](SECURITY.md).
 
 Open each file in `/context/` and replace the `[PLACEHOLDER]` values with your company's information:
 
