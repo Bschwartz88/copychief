@@ -51,6 +51,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import zipfile
 from pathlib import Path
 
@@ -102,9 +103,11 @@ def _clean_md_line(s: str) -> str:
 # ---------------------------------------------------------------------------
 
 def _to_markdown(src: Path) -> str:
+    # Absolute paths cannot be interpreted as converter options (e.g. --filter).
+    src = src.resolve()
     ext = src.suffix.lower()
     if ext == ".pdf":
-        txt = subprocess.run(["pdftotext", str(src), "-"], capture_output=True, text=True, check=True).stdout
+        txt = subprocess.run(["pdftotext", str(src), "-"], capture_output=True, text=True, check=True, timeout=60).stdout
         paras = [re.sub(r"\s*\n\s*", " ", p).strip() for p in re.split(r"\n\s*\n", txt)]
         return "\n\n".join(p for p in paras if p)
     if ext == ".txt":
@@ -119,8 +122,8 @@ def _to_markdown(src: Path) -> str:
         if ext == ".docx":
             return _docx_to_markdown(src)
         sys.exit("ERROR: pandoc is not installed; it's needed to read this file type.")
-    r = subprocess.run(["pandoc", "-f", fmt, "-t", "gfm", "--wrap=none", str(src)],
-                       capture_output=True, text=True)
+    r = subprocess.run(["pandoc", "--sandbox", "-f", fmt, "-t", "gfm", "--wrap=none", str(src)],
+                       capture_output=True, text=True, timeout=60)
     if r.returncode != 0:
         sys.exit(f"ERROR: pandoc failed: {r.stderr.strip()}")
     return _flatten_html_tables(r.stdout)
@@ -164,8 +167,8 @@ def _docx_to_markdown(src: Path) -> str:
 
 
 def _html_to_md(fragment: str) -> str:
-    r = subprocess.run(["pandoc", "-f", "html", "-t", "gfm", "--wrap=none"],
-                       input=fragment, capture_output=True, text=True)
+    r = subprocess.run(["pandoc", "--sandbox", "-f", "html", "-t", "gfm", "--wrap=none"],
+                       input=fragment, capture_output=True, text=True, check=True, timeout=60)
     return r.stdout.strip()
 
 
@@ -347,6 +350,8 @@ def build_blocks(source: dict, edits: dict):
                 sys.exit(f"ERROR: paragraph {e['n']} has two edits; combine them into one.")
             by_n[e["n"]] = e
         elif "after" in e:
+            if e["after"] != 0 and e["after"] not in paras:
+                sys.exit(f"ERROR: insertion refers to paragraph {e['after']}, which doesn't exist.")
             inserts.setdefault(e["after"], []).append(e)
         else:
             sys.exit(f"ERROR: each edit needs 'n' or 'after': {e}")
@@ -471,11 +476,12 @@ def slim_docx(path: Path) -> None:
             styles = styles.replace(b, "")
     styles = re.sub(r"<w:latentStyles\b.*?</w:latentStyles>", "", styles, flags=re.S)
     files["word/styles.xml"] = styles.encode()
-    tmp = path.with_suffix(".slim.tmp")
-    with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
-        for n, data in files.items():
-            z.writestr(n, data)
-    tmp.replace(path)
+    with tempfile.TemporaryDirectory(prefix="copychief-slim-", dir=path.parent) as temp:
+        tmp = Path(temp) / "document.docx"
+        with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+            for n, data in files.items():
+                z.writestr(n, data)
+        tmp.replace(path)
 
 
 def verify_docx(path: Path, n_comments: int) -> list[str]:

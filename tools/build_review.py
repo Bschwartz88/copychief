@@ -25,7 +25,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import docx_lib
-from _paths import load_data, resolve
+from _paths import load_data, resolve, checked_path
 
 
 def main():
@@ -49,12 +49,12 @@ def main():
 
     out_dir = resolve(slug)["reviews"]
     out_dir.mkdir(parents=True, exist_ok=True)
+    docx_path = checked_path(out_dir / f"{slug}-edits.docx")
+    html_path = checked_path(out_dir / f"{slug}-edits.html")
 
     doc = docx_lib.render_docx(blocks, comments=comments, title=review.get("title"))
-    docx_path = out_dir / f"{slug}-edits.docx"
     doc.save(docx_path)
 
-    html_path = out_dir / f"{slug}-edits.html"
     html_path.write_text(
         docx_lib.render_html(review["blocks"], comments=comments, title=review.get("title")),
         encoding="utf-8",

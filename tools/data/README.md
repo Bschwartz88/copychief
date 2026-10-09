@@ -7,6 +7,10 @@ HTML output are handled by the shared tools (`build_prep.py`, `build_review.py`,
 
 ## Schema
 
+Only literal assignments are accepted: dictionaries, lists, tuples, strings,
+numbers, booleans and None. Do not add imports, function calls, variable references
+or other executable code. The loader reads content without executing Python.
+
 ```python
 PREP = {
     "title": "Prep: Article Title",

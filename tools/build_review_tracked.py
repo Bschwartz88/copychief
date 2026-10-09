@@ -57,6 +57,8 @@ import itertools
 import re
 import sys
 import zipfile
+import tempfile
+from _security import safe_url, safe_comment_id
 from datetime import datetime
 from pathlib import Path
 
@@ -125,6 +127,7 @@ def _wrap(el, tag: str) -> None:
 
 
 def _add_hyperlink(paragraph, url: str, text: str):
+    url = safe_url(url)
     part = paragraph.part
     r_id = part.relate_to(
         url,
@@ -274,10 +277,10 @@ def build_docx(docx_path: Path, header: bool = True) -> None:
             _render_paragraph(doc, style, op, cid, payload)
 
     docx_path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = docx_path.parent / "_review_tmp.docx"
-    doc.save(tmp)
-    _postprocess_comments(tmp, docx_path)
-    tmp.unlink(missing_ok=True)
+    with tempfile.TemporaryDirectory(prefix="copychief-", dir=docx_path.parent) as work:
+        tmp = Path(work) / "review.docx"
+        doc.save(tmp)
+        _postprocess_comments(tmp, docx_path)
 
 
 def _add_header(doc) -> None:
@@ -314,6 +317,7 @@ def _replace_sentinels(doc_xml: str) -> str:
         return pat.sub(replacement, xml)
 
     for cid in COMMENTS:
+        cid = safe_comment_id(cid)
         doc_xml = repl(smark(cid), f'<w:commentRangeStart w:id="{cid}"/>', doc_xml)
         doc_xml = repl(
             emark(cid),
@@ -339,6 +343,7 @@ def _comments_xml() -> str:
     ]
     today = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
     for cid, (label, reason) in COMMENTS.items():
+        cid = safe_comment_id(cid)
         body = f"{label}. {reason}"
         parts.append(
             f'<w:comment w:id="{cid}" w:author="{_xml_escape(AUTHOR)}" w:date="{today}" w:initials="CC">'
@@ -406,6 +411,8 @@ def _html_tokens(op, tokens):
         kind = tok[0]
         if kind == "c":
             continue
+        if kind in ("kl", "il"):
+            safe_url(tok[2])
         if op == "ins":
             if kind in ("kl", "il"):
                 out.append(f'<ins><a href="{htmllib.escape(tok[2])}">{htmllib.escape(tok[1])}</a></ins>')
@@ -490,11 +497,14 @@ Google Doc, where the tracked changes become suggestions and the comments appear
 def main() -> None:
     if len(sys.argv) != 2:
         sys.exit("Usage: python tools/build_review_tracked.py <slug>")
-    slug = sys.argv[1].strip().strip("/\\")
+    slug = sys.argv[1]
     reviews = load_project(slug)
     reviews.mkdir(parents=True, exist_ok=True)
     docx_path = reviews / f"{slug}-edits.docx"
     html_path = reviews / f"{slug}-edits.html"
+    from _paths import checked_path
+    checked_path(docx_path)
+    checked_path(html_path)
     build_docx(docx_path)
     build_html(html_path)
     print(f"Wrote: {docx_path}")

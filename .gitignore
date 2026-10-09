@@ -14,6 +14,12 @@ build/
 .env
 *.env
 .env.local
+.env.*
+!.env.example
+credentials*.json
+token*.json
+*.pem
+*.key
 
 # Blog content (proprietary — not tracked in template)
 # brief .md files, and all content in research/, drafts/, published/
@@ -21,6 +27,17 @@ blog/briefs/*.md
 blog/research/**
 blog/drafts/**
 blog/published/**
+blog/reviews/**
+!blog/reviews/.gitkeep
+blog/briefs/**
+!blog/briefs/.gitkeep
+tools/data/*
+!tools/data/README.md
+!tools/data/_template_tracked.py
+output/
+.cache/
+.tmp/
+_review/
 
 # OS
 .DS_Store
